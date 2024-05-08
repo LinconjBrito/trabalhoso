@@ -20,3 +20,6 @@ print("Informe os seguintes dados do sistema:")
 Quantum_Do_Sistema = int(input("Quantum do sistema: "))
 Sobrecarda_Do_Sistema = int(input("Sobrecarga do sistema: "))
 
+
+
+
