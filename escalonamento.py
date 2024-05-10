@@ -57,7 +57,10 @@ def fifo():
         if k == len(lista_ordenada_tempo_chegada) - 1:
             print(f"Turnaround: {v['T_medio']:.2f}")
         else:
-            print(f"{k+1} -- > {v['T_medio']}")
+            print(f"Processo {k+1} -- > {v['T_medio']}")
+
+
+
 
 
 
