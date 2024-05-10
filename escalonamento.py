@@ -18,6 +18,7 @@ def execucao():
                 match escolha:
                     case 1:
                         print("FIFO. Vamos lá!")
+                        fifo()
                      
                     case 2:
                         print("SJF. Vamos lá!")
@@ -35,8 +36,6 @@ def execucao():
                 print("\033[0;31mPor favor! Escolha um valor entre 1 e 5!\033[m")
        
 def fifo():
-    
-
     turnaround = 0
     tempo_atual = 0 #Tempo decorrido do sistema
     lista_ordenada_tempo_chegada = sorted(lista_processos, key=lambda dicionario: dicionario['T_chegada'])
@@ -60,13 +59,10 @@ def fifo():
         else:
             print(f"{k+1} -- > {v['T_medio']}")
 
-fifo()
 
 
 
-
-
-
+execucao()
 
 
      
