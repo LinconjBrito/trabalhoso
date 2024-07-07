@@ -1,11 +1,12 @@
 
+
 qnt_processos = int(input("Informe a quantidade de processos: "))
 lista_processos = []
 processo = {}
 
 for c in range(qnt_processos):
     print(f"Informe os dados do processo {c+1}: ")
-    processo = {"T_chegada" : int(input("Tempo de Chegada")), "T_exec": int(input("Tempo de Execução")), "Deadline": int(input("Deadline")),}
+    processo = {"T_chegada" : int(input("Tempo de Chegada: ")), "T_exec": int(input("Tempo de Execução: ")), "Prio": int(input("Prioridade: ")), "Deadline": int(input("Deadline: ")),}
     lista_processos.append(processo.copy())
     processo.clear()
 
@@ -62,6 +63,9 @@ def fifo():
 
 
 
+
+
+
 def sjf():
     # Inicialização de variáveis
     tempo_atual = 0
@@ -102,7 +106,7 @@ def sjf():
         print(f"{processo}\n")
 
 
-#Texto
+
 
 execucao()
 
@@ -128,11 +132,3 @@ execucao()
 
 
    
-
-
-
-
-
-
-
-
