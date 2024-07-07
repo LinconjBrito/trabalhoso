@@ -62,9 +62,6 @@ def fifo():
 
 
 
-
-
-
 def sjf():
     # Inicialização de variáveis
     tempo_atual = 0
@@ -105,7 +102,7 @@ def sjf():
         print(f"{processo}\n")
 
 
-
+#Texto
 
 execucao()
 
