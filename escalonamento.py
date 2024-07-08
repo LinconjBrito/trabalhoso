@@ -6,7 +6,7 @@ processo = {}
 
 for c in range(qnt_processos):
     print(f"Informe os dados do processo {c+1}: ")
-    processo = {"T_chegada" : int(input("Tempo de Chegada: ")), "T_exec": int(input("Tempo de Execução: ")), "Prio": int(input("Prioridade: ")), "Deadline": int(input("Deadline: ")),}
+    processo = {"T_chegada" : int(input("Tempo de Chegada: ")), "T_exec": int(input("Tempo de Execução: ")), "Deadline": int(input("Deadline: ")), "Quantum" : int(input("Quantum do Sitema: ")), "Sobrecarga" : int(input("Sobrecarga do Sistema: "))}
     lista_processos.append(processo.copy())
     processo.clear()
 
@@ -18,7 +18,7 @@ def execucao():
             if 5 >= escolha and escolha >= 1:
                 match escolha:
                     case 1:
-                        print("FIFO. Vamos lá!")
+                        print("\033[0;32mFIFO. Vamos lá!\033[m")
                         fifo()
                      
                     case 2:
@@ -97,13 +97,47 @@ def sjf():
             # Se não há processos disponíveis, avança o tempo
             tempo_atual = lista_processos2[0]["T_chegada"]
 
-    # Calcula o turnaround médio
-    turnaround_medio = turnaround / qnt_processos
-    lista_final.append({"T_medio": turnaround_medio})
+    
+    
+    #Imprime o tempo médio de cada processo
+    for k, v in enumerate(lista_final):
+        print(f"Tempo médio Processo {k+1}: {v['T_medio']}")
 
-    # Imprime o resultado
-    for processo in lista_final:
-        print(f"{processo}\n")
+
+    turnaround_medio = turnaround / qnt_processos
+
+    print("Lista por ordem de execução: ")
+    for k, v in enumerate(lista_final):
+        print(f"{k+1} -- > {v['T_medio']}")
+        if k == len(lista_final):
+            print(f"Turnaround: {turnaround_medio}")
+            lista_final.append({"T_medioG": turnaround_medio})
+
+
+
+    # Calcula o turnaround médio
+    
+
+
+
+
+ 
+
+    #Imprime os processo em ordem de execução
+    # print("Lista por ordem de execução: ")
+    # for k, v in enumerate(sorted(lista_final, key=lambda dicionario: dicionario["T_medio"])):
+    #     if k == len(lista_final) - 1:
+    #         print(f"Turnaround: {v['T_medio']:.2f}")
+    #     else:
+    #         print(f"{k+1} -- > {v['T_medio']}")
+
+
+
+        
+
+
+    
+        
 
 
 
