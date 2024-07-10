@@ -42,6 +42,7 @@ def execucao():
                 n = escolha
             else: 
                 print("\033[0;31mPor favor! Escolha um valor entre 1 e 5!\033[m")
+     
        
 def fifo():
     turnaround = 0
@@ -49,7 +50,6 @@ def fifo():
     lista_ordenada_tempo_chegada = sorted(lista_processos, key=lambda dicionario: dicionario['T_chegada'])
     for k, v in enumerate(lista_ordenada_tempo_chegada):
         espera = max(0, tempo_atual - v['T_chegada']) #Calcula o tempo de espera do processo
-        print(f"Tempo médio Processo {k+1}: {espera + v['T_exec']}")
         v['T_medio'] = espera + v['T_exec'] 
         if k > 0:
             tempo_atual += v['T_exec'] #Incrementa o tempo atual com o tempo de execução do processo.
@@ -60,22 +60,21 @@ def fifo():
 
 
     turnaround = turnaround / len(lista_processos)
-    print(turnaround)
+
+    print(f"Turnaround medio de: {float(turnaround)}")
+    
 
 
-    processo = {"T_medio": turnaround}
-    lista_ordenada_tempo_chegada.append(processo.copy())
-    processo.clear()
+    # processo = {"T_medio": turnaround}
+    # lista_ordenada_tempo_chegada.append(processo.copy())
+    # processo.clear()
 
-    print("Lista por ordem de execução: ")
-    for k, v in enumerate(lista_ordenada_tempo_chegada):
-        if k == len(lista_ordenada_tempo_chegada) - 1:
-            print(f"Turnaround: {v['T_medio']:.2f}")
-        else:
-            print(f"{k+1} -- > {v['T_medio']}")
-
-
-
+    # print("Lista por ordem de execução: ")
+    # for k, v in enumerate(lista_ordenada_tempo_chegada):
+    #     if k == len(lista_ordenada_tempo_chegada) - 1:
+    #         print(f"Turnaround: {v['T_medio']:.2f}")
+    #     else:
+    #         print(f"{k+1} -- > {v['T_medio']}")
 
 
 def sjf():
