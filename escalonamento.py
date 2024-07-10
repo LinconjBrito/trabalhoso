@@ -6,9 +6,13 @@ processo = {}
 
 for c in range(qnt_processos):
     print(f"Informe os dados do processo {c+1}: ")
-    processo = {"T_chegada" : int(input("Tempo de Chegada: ")), "T_exec": int(input("Tempo de Execução: ")), "Deadline": int(input("Deadline: ")), "Quantum" : int(input("Quantum do Sitema: ")), "Sobrecarga" : int(input("Sobrecarga do Sistema: "))}
+    processo = {"T_chegada" : float(input("Tempo de Chegada: ")), "T_exec": float(input("Tempo de Execução: ")), "Deadline": float(input("Deadline: ")), "T_medio": 0}
     lista_processos.append(processo.copy())
     processo.clear()
+
+quantum = float(input("Qual o quantum do Sitema?"))
+sobrecarga = float(input("Qual a sobrecarga do sistema?"))
+
 
 
 def execucao():
@@ -27,9 +31,11 @@ def execucao():
 
                     case 3:
                         print("Round Robin. Vamos lá!")
+                        round_r()
 
                     case 4:
                         print("EDF. Vamos lá!")
+                        edf()
             
                     case 5: 
                         print("Saindo...")
@@ -45,11 +51,18 @@ def fifo():
         espera = max(0, tempo_atual - v['T_chegada']) #Calcula o tempo de espera do processo
         print(f"Tempo médio Processo {k+1}: {espera + v['T_exec']}")
         v['T_medio'] = espera + v['T_exec'] 
-        tempo_atual += v['T_exec'] #Incrementa o tempo atual com o tempo de execução do processo.
+        if k > 0:
+            tempo_atual += v['T_exec'] #Incrementa o tempo atual com o tempo de execução do processo.
+        else:
+            tempo_atual += v["T_chegada"] + v['T_exec'] #Incrementa o tempo atual com o tempo de execução do processo.
+
         turnaround += v['T_medio']
 
+
     turnaround = turnaround / len(lista_processos)
-    turnaround = round(turnaround, 2)
+    print(turnaround)
+
+
     processo = {"T_medio": turnaround}
     lista_ordenada_tempo_chegada.append(processo.copy())
     processo.clear()
@@ -65,7 +78,6 @@ def fifo():
 
 
 
-
 def sjf():
     # Inicialização de variáveis
     tempo_atual = 0
@@ -74,7 +86,7 @@ def sjf():
 
     # Lista de processos ordenados por tempo de chegada
     lista_processos2 = sorted(lista_processos, key=lambda dicionario: dicionario["T_chegada"])
-
+ 
     # Enquanto houver processos na lista de processos
     while lista_processos2:
         # Filtra processos que já chegaram
@@ -97,72 +109,111 @@ def sjf():
             # Se não há processos disponíveis, avança o tempo
             tempo_atual = lista_processos2[0]["T_chegada"]
 
-    
-    
-    #Imprime o tempo médio de cada processo
-    for k, v in enumerate(lista_final):
-        print(f"Tempo médio Processo {k+1}: {v['T_medio']}")
-
-
-    turnaround_medio = turnaround / qnt_processos
-
-    print("Lista por ordem de execução: ")
-    for k, v in enumerate(lista_final):
-        print(f"{k+1} -- > {v['T_medio']}")
-        if k == len(lista_final):
-            print(f"Turnaround: {turnaround_medio}")
-            lista_final.append({"T_medioG": turnaround_medio})
-
-
-
-    # Calcula o turnaround médio
+    turnaround = turnaround/qnt_processos
+    print(f"Turnaround medio de: {float(turnaround)}")
     
 
+def round_r():
 
 
+    lista_tempo_chegada = [] 
+    lista_tempo_execucao = []
 
- 
-
-    #Imprime os processo em ordem de execução
-    # print("Lista por ordem de execução: ")
-    # for k, v in enumerate(sorted(lista_final, key=lambda dicionario: dicionario["T_medio"])):
-    #     if k == len(lista_final) - 1:
-    #         print(f"Turnaround: {v['T_medio']:.2f}")
-    #     else:
-    #         print(f"{k+1} -- > {v['T_medio']}")
+    for k, v in enumerate(lista_processos):
+        lista_tempo_chegada.append(v['T_chegada'])
+        lista_tempo_execucao.append(v['T_exec'])
 
 
-
-        
-
-
+    tempo = turnaround = 0
     
-        
+    tempo_cpu = [0]*qnt_processos  
+    lista_processamento = [0]*qnt_processos  
+    lista_circular = [] 
+    
+    def verificaFila():
+        for x in range(0,qnt_processos):
+            if lista_tempo_chegada[x] <= tempo and lista_processamento[x] == 0:
+                lista_processamento[x] = 1 
+                lista_circular.append(x)  
+            pass
+    verificaFila()
+
+    for p in lista_circular:
+        resta_executar = lista_tempo_execucao[p]-tempo_cpu[p]  
+        if resta_executar > quantum:
+            tempo+= quantum
+            verificaFila()
+            tempo_cpu[p]+=quantum
+            tempo+= sobrecarga
+            verificaFila()
+            lista_circular.append(p)
+        elif resta_executar == quantum and resta_executar > 0 : 
+            tempo+=quantum
+            verificaFila()
+            tempo_cpu[p]+=quantum
+            turnaround+=tempo-lista_tempo_chegada[p]
+        elif resta_executar < quantum:
+            tempo+= resta_executar
+            verificaFila()
+            tempo_cpu[p]+=resta_executar
+            turnaround+=tempo-lista_tempo_chegada[p]
+    
+    print(f"Turnaround medio de: {float(turnaround/qnt_processos)}") 
 
 
+def edf():
+      
+    lista_tempo_chegada = [] 
+    lista_tempo_execucao = []
+    lista_deadlines = []
+
+    for k, v in enumerate(lista_processos):
+        lista_tempo_chegada.append(v['T_chegada'])
+        lista_tempo_execucao.append(v['T_exec'])
+        lista_deadlines.append(v['Deadline'])
+
+    tempo = turnaround = 0
+    
+    tempo_cpu = [0]*qnt_processos  
+    lista_processamento = [0]*qnt_processos  
+
+    def verificaFila():
+        for x in range(0,qnt_processos):
+            if lista_tempo_chegada[x] <= tempo and lista_processamento[x] == 0:
+                lista_processamento[x] = 1
+            pass
+    verificaFila()
+    def firstKill():
+        deadline_proxima = 1000
+        escolhido = -1
+        for x in range(0,qnt_processos):
+            if lista_processamento[x] == 1 and lista_deadlines[x] < deadline_proxima and tempo_cpu[x] < lista_tempo_execucao[x]:
+                deadline_proxima = lista_deadlines[x]
+                escolhido = x
+            pass
+        return escolhido
+
+    while firstKill() != -1:
+        p = firstKill()
+        resta_executar = lista_tempo_execucao[p]-tempo_cpu[p] 
+        if resta_executar > quantum:
+            tempo+=quantum
+            verificaFila()
+            tempo_cpu[p]+=quantum 
+            tempo+=sobrecarga
+            verificaFila()
+        elif resta_executar == quantum and resta_executar > 0: 
+            tempo+=quantum
+            verificaFila() 
+            tempo_cpu[p]+=quantum 
+            turnaround+=tempo-lista_tempo_chegada[p] 
+        elif resta_executar < quantum:
+            tempo+= resta_executar
+            verificaFila()
+            tempo_cpu[p]+=resta_executar
+            turnaround+=tempo-lista_tempo_chegada[p]
+
+    print(f"Turnaround medio de: {float(turnaround/qnt_processos)}")  
 
 
 execucao()
-
-
-     
-
-    
-
-
-
-
-
-
-    
-    
-    
-
-
-
-
-
-
-
-
-   
